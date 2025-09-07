@@ -4,6 +4,7 @@
 __pycache__/
 *.so
 *.o
+*.sh
 *.egg-info/
 
 csrc/
