@@ -1,0 +1,11 @@
+.venv/
+.vscode/
+
+__pycache__/
+*.pyi
+*.so
+*.o
+*.egg-info/
+
+dist/
+csrc/
