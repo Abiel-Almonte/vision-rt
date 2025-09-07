@@ -14,7 +14,7 @@ GPU-accelerated computer vision pipeline for real-time inference.
 
 ```bash
 # Build the module
-./build_module.sh
+pip install https://github.com/Abiel-Almonte/vision-rt/releases/download/v0.1.0/vision_rt-0.1.0-cp311-cp311-linux_x86_64.whl
 
 # Test Installation
 python -c "import vision_rt; print('VisionRT loaded')"
