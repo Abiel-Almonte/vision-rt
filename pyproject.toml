@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "torch", "pybind11"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vision-rt"
+version = "0.1.0"
+description = "GPU-accelerated cam2act pipeline with CUDA Graphs and fused kernels"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+authors = [
+    {name = "Abiel Almonte", email = "abielalmonte.eng@gmail.com"},
+]
+
+dependencies = [
+    "opencv-python==4.10.0.84",
+    "torch==2.8.0",
+    "torchvision==0.23.0+cu128",
+    "numpy==2.1.2"
+]
+
+[tool.uv.sources]
+torch = { index = "torch-cuda" }
+
+[[tool.uv.index]]
+name = "torch-cuda"
+url = "https://download.pytorch.org/whl/cu128" #blackwell
+
+[tool.uv]
+dev-dependencies = [
+    "black",
+    "pybind11-stubgen",
+]
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["csrc*", "benchmarks*", "images*"]
+
+[tool.setuptools.package-data]
+vision_rt = ["*.so", "*.pyd", "*.pyi"]
+
+# Type checker configuration
+[tool.pyright]
+stubPath = "."
+extraPaths = ["."]
+
+[tool.mypy]
+mypy_path = "."
