@@ -1,14 +1,14 @@
 # VisionRT
 
-**Zero-overhead real-time computer vision.** Enabled by GPU-resident frame acquisition, FX graph transformations, and CUDA graph capture.
+**Zero-overhead real-time computer vision.** 
+
+Enabled by GPU-resident frame acquisition, FX graph transformations, and CUDA graph capture.
 
 ## Same workload, zero overhead
 
-**Benchmark against the standard OpenCV + PyTorch pipeline.**
-
 ![rtcv](images/rtcv.png)
 
-*Figure: VisionRT fits within the 90 FPS (11 ms) frame budget. The standard pipeline overruns, dropping to ~40-45 FPS.*
+VisionRT fits within the 90 FPS frame budget. The standard pipeline overruns, dropping to ~40-45 FPS.
 
 ## Surprisingly Deterministic
 
@@ -18,6 +18,8 @@
 
 The narrow peaks (~10-12ms) show VisionRT's latency is so low and consistent that you can actually **see the hardware**. In this case, the bimodal distribution is the webcam itself, not software jitter.
 
+
+>Benchmarked against the standard OpenCV + PyTorch pipeline.
 ## Requirements
 
 - CUDA 12.8+
