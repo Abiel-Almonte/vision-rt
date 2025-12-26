@@ -16,7 +16,7 @@ VisionRT fits within the 90 FPS frame budget. The standard pipeline overruns, dr
 
 **VisionRT is so fast, it reveals your camera's true refresh rate.**
 
-The narrow peaks (~10-12ms) show VisionRT's latency is so low and consistent that you can actually **see the hardware**. In this case, the bimodal distribution is the webcam itself, not software jitter.
+The narrow peaks (~10-12ms) show VisionRT's latency is so low and consistent that you can actually **see the hardware**! In this case, the bimodal distribution is the webcam itself, not software jitter.
 
 
 >Benchmarked against the standard OpenCV + PyTorch pipeline.
