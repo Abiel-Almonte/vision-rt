@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel", "torch", "pybind11", "numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vision-rt"
+name = "visionrt"
 version = "0.1.0"
-description = "GPU-accelerated cam2act pipeline with CUDA Graphs and fused kernels"
+description = "Zero overhead real-time computer vision inference "
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 authors = [

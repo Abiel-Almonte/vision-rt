@@ -33,8 +33,8 @@ The narrow peaks (~10-12ms) show VisionRT's latency is so low and consistent tha
 ## Installation
 
 ```bash
-git clone https://github.com/Abiel-Almonte/vision-rt
-cd vision-rt
+git clone https://github.com/Abiel-Almonte/visionrt
+cd visionrt
 ./build_module.sh
 ```
 
