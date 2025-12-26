@@ -9,7 +9,7 @@ export CUDA_HOME=/usr/local/cuda
 export CUDACXX=/usr/local/cuda/bin/nvcc
 
 if [ -n "${VIRTUAL_ENV-}" ]; then
-  export LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/python3.11/site-packages/torch/lib:$VIRTUAL_ENV/lib/python3.11/site-packages/nvidia/cudnn/lib:${LD_LIBRARY_PATH-}"
+  export LD_LIBRARY_PATH="$VIRTUAL_ENV/lib/python3.11/site-packages/torch/lib:${LD_LIBRARY_PATH-}"
 fi
 
 if [[ "${1-}" == "release" ]]; then
