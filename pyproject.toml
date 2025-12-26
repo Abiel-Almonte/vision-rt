@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel", "torch", "pybind11"]
+requires = ["setuptools>=68", "wheel", "torch", "pybind11", "numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -16,7 +16,11 @@ dependencies = [
     "opencv-python==4.10.0.84",
     "torch==2.8.0",
     "torchvision==0.23.0+cu128",
-    "numpy==2.1.2"
+    "numpy==2.1.2",
+    "matplotlib",
+    "seaborn",
+    "nvtx",
+    "optuna"
 ]
 
 [tool.uv.sources]
@@ -40,7 +44,7 @@ where = ["."]
 exclude = ["csrc*", "benchmarks*", "images*"]
 
 [tool.setuptools.package-data]
-vision_rt = ["*.so", "*.pyd", "*.pyi"]
+_visionrt = ["*.so", "*.pyd", "*.pyi"]
 
 # Type checker configuration
 [tool.pyright]
