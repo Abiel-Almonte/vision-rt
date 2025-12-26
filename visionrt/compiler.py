@@ -88,7 +88,7 @@ class CompiledModel:
             else:
                 cudagraph_status = "not captured"
 
-        optims = self._cfg.get("optims", [])
+        optims = self._cfg.get("custom_optims", [])
         optims_str = ", ".join(optims) if optims else "none"
 
         parts = [
@@ -148,7 +148,6 @@ def visionrt(gm: fx.GraphModule, ins):
 
 
 def compile(model: nn.Module):
-
     cfg = {
         "use_inductor": config.use_inductor,
         "cudagraphs": config.cudagraphs,
