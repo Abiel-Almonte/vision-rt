@@ -4,7 +4,7 @@ C++/CUDA runtime providing a GPU-resident pipeline for camera capture, preproces
 from __future__ import annotations
 import torch
 import typing
-__all__: list[str] = ['Camera', 'FrameGenerator', 'GraphCachedModule']
+__all__: list[str] = ['Camera', 'FrameGenerator', 'GraphExecutor', 'fused_add_relu_cuda', 'set_verbose']
 class Camera:
     """
     Wrapper around a V4L2 camera device
@@ -17,6 +17,10 @@ class Camera:
         """
         Close the opened camera
         """
+    def get_stats(self) -> dict:
+        """
+        Get aggregated timing statistics for the camera pipeline as a Python dictionary.
+        """
     def print_formats(self) -> None:
         """
         Print all supported camera formats.
@@ -25,7 +29,11 @@ class Camera:
         """
         Print the currently selected camera format.
         """
-    def set_format(self, index: int) -> None:
+    def reset_stats(self) -> None:
+        """
+        Reset internal timing statistics.
+        """
+    def set_format(self, index: typing.SupportsInt) -> None:
         """
         Set the capture format.
         """
@@ -47,7 +55,7 @@ class FrameGenerator:
         
         Raises StopIteration when no frames remain.
         """
-class GraphCachedModule:
+class GraphExecutor:
     """
     Modfier that compiles and captures CUDA graph for the given PyTorch module
     """
@@ -59,11 +67,19 @@ class GraphCachedModule:
         """
         PyTorch module to compile and capture
         """
-    def capture(self, example_tensor: torch.Tensor) -> None:
+    def capture(self, tensor: torch.Tensor) -> None:
         """
-        Capture CUDA graph with example input
+        Capture CUDA graph
         """
     def is_captured(self) -> bool:
         """
         Return True if CUDA graph has been captured
         """
+def fused_add_relu_cuda(arg0: torch.Tensor, arg1: torch.Tensor) -> torch.Tensor:
+    """
+    Fused add + relu
+    """
+def set_verbose(arg0: bool) -> None:
+    """
+    Enable/disable verbose logging
+    """
