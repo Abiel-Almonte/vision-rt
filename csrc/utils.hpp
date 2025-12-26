@@ -3,7 +3,6 @@
 #include <linux/videodev2.h>
 #include <stdint.h>
 #include <unistd.h>
-#include <tuple>
 #include <iostream>
 #include <sstream>
 #include <cstring>
