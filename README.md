@@ -1,71 +1,70 @@
 # VisionRT
 
-GPU-accelerated computer vision pipeline for real-time inference.
+**Zero-overhead real-time computer vision.** Enabled by GPU-resident frame acquisition, FX graph transformations, and CUDA graph capture.
 
-## Same workload, 12x Faster
+## Same workload, zero overhead
 
 **Benchmark against the standard OpenCV + PyTorch pipeline.**
 
 ![rtcv](images/rtcv.png)
 
-*Figure: VisionRT fits within the 90 FPS (11 ms) frame budget. The standard pipeline overruns, dropping to ~40 FPS.*
+*Figure: VisionRT fits within the 90 FPS (11 ms) frame budget. The standard pipeline overruns, dropping to ~40-45 FPS.*
 
-## Quick Start
+## Surprisingly Deterministic
 
-```bash
-# Build the module
-pip install https://github.com/Abiel-Almonte/vision-rt/releases/download/v0.1.0/vision_rt-0.1.0-cp311-cp311-linux_x86_64.whl
+![kde](images/latency_kde.png)
 
-# Test Installation
-python -c "import vision_rt; print('VisionRT loaded')"
-```
+**VisionRT is so fast, it reveals your camera's true refresh rate.**
 
+The narrow peaks (~10-12ms) show VisionRT's latency is so low and consistent that you can actually **see the hardware**. In this case, the bimodal distribution is the webcam itself, not software jitter.
 
 ## Requirements
 
 - CUDA 12.8+
 - Python 3.11
+- PyTorch 2.8
 - V4L2 camera device
 
->**Note:** Add your user to the video group for camera access:  
->`sudo usermod -aG video $USER`
+>**Note:** Add your user to the video group for camera access: `sudo usermod -aG video $USER`
 
+
+## Installation
+
+```bash
+git clone https://github.com/Abiel-Almonte/vision-rt
+cd vision-rt
+./build_module.sh
+```
 
 ## Usage
 
 ```python
 import torch
 import torch.nn as nn
-import vision_rt as vrt
+from torchvision.models import resnet50, ResNet50_Weights
 
-# Initialize CUDA
-torch.cuda.init()
+import visionrt
+from visionrt import Camera
 
-# Open camera
-camera = vrt.Camera('/dev/video0')
-camera.set_format(0)  # choose a capture format
+visionrt.config.verbose = True
+visionrt.config.cudagraphs = True
+visionrt.config.optims.fold_conv_bn = True
 
-# Define a PyTorch model
-model = nn.Sequential(
-    nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3),
-    nn.ReLU(),
-    nn.AdaptiveAvgPool2d((1, 1)),
-    nn.Flatten(),
-    nn.Linear(64, 10),
-).cuda()
+model = (
+    nn.Sequential(
+        nn.Upsample(size=(224, 224), mode="bilinear", align_corners=False),
+        resnet50(weights=ResNet50_Weights.IMAGENET1K_V2),
+        nn.Softmax(dim=1),
+    )
+    .cuda()
+    .eval()
+)
 
-# Wrap with VisionRT's CUDA Graph caching
-rt_model = vrt.GraphCachedModule(model)
+camera = Camera("/dev/video0")
+model = visionrt.compile(model)
 
-# Capture a CUDA graph with example input
-example_input = torch.randn(1, 3, 224, 224).cuda()
-rt_model.capture(example_input)
+with torch.inference_mode():
 
-# Stream frames and run inference in real time
-for frame in camera.stream():
-    output = rt_model(frame)
-    print("Output:", output.shape)
-    break
-
-camera.close()
+    for frame in camera.stream():
+        out = model(frame.unsqueeze(0))
 ```
