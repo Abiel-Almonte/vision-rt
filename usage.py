@@ -20,11 +20,11 @@ model = (
 )
 labels = ResNet50_Weights.IMAGENET1K_V2.meta["categories"]
 
+camera = Camera("/dev/video0")
 optimized_model = visionrt.compile(model)
 print(optimized_model)  # snapshot of the config
 
 with torch.inference_mode():
-    camera = Camera("/dev/video0")
     for frame in camera.stream():
         frame = frame.unsqueeze(0)
 
