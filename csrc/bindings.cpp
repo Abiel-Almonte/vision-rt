@@ -2,7 +2,7 @@
 #include <Python.h>
 
 #include "camera.hpp"
-#include "graph.cuh"
+#include "graph.hpp"
 #include "ops.hpp"
 #include "utils.hpp"
 

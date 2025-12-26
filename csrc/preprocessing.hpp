@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <cuda_runtime.h>
 
-#include "buffers.cuh"
+#include "buffers.hpp"
 #include "utils.hpp"
 
 void launch_yuyv2rgb_chw(uint32_t* yuyv, float* rgb, size_t length, int height, int width, int n_blocks, int block_dim, cudaStream_t stream = 0);

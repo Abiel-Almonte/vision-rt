@@ -5,7 +5,7 @@
 #include <torch/torch.h>
 #include <pybind11/pybind11.h>
 
-#include "buffers.cuh"
+#include "buffers.hpp"
 #include "utils.hpp"
 #include "preprocessing.hpp"
 
