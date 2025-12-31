@@ -57,12 +57,17 @@ def warmup(model, cap, iters=50, memory_format=None):
             break
 
 
-def profile(name, model, cap, iters, memory_format=None):
-    """Profile model (call only after warmup and within profiler context)."""
+def profile(name, model, cap, iters, memory_format=None, perf=False):
+
+    if not perf:
+        cudart().cudaProfilerStart()  # type: ignore
     with nvtx.annotate(f"profile_{name}"):
         for _ in range(iters):
             if not run_standard(cap, model, name, memory_format):
                 break
+
+    if not perf:
+        cudart().cudaProfilerStop()  # type: ignore
 
 
 if __name__ == "__main__":
@@ -75,6 +80,8 @@ if __name__ == "__main__":
     config.verbose = True
 
     profile_iters = int(os.environ.get("ITERS", "1000"))
+    PERF = bool(int(os.environ.get("PERF", "1")))  # zero means off
+
     model = (
         nn.Sequential(
             nn.Upsample(size=(224, 224), mode="bilinear", align_corners=False),
@@ -84,39 +91,49 @@ if __name__ == "__main__":
         .eval()
     )
 
-    cudart().cudaProfilerStart()  # type: ignore
+    class TempCompiledModel:
+        def __init__(self):
+            self._base_model = model
+
+        def __enter__(self):
+            torch._dynamo.reset()  # remove the torch.compile cache or else it will dupe the last compile
+            self._compiled_model = compile(copy.deepcopy(self._base_model))
+            return self._compiled_model
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            del self._compiled_model  # remove from gpu memory
+
+    if PERF:
+        cudart().cudaProfilerStart()  # type: ignore
 
     # base model
     warmup(model, cap)
-    profile("baseline", model, cap, profile_iters)
+    profile("baseline", model, cap, profile_iters, perf=PERF)
 
     # base compiled mode
-    torch._dynamo.reset()
-    config.use_custom = False
-    inductor_model = compile(copy.deepcopy(model))
-    warmup(inductor_model, cap)
-    profile("inductor", inductor_model, cap, profile_iters)
-    del inductor_model
+    with TempCompiledModel() as inductor_model:
+        warmup(inductor_model, cap)
+        profile("inductor", inductor_model, cap, profile_iters, perf=PERF)
 
     # constant folding + kernel fusing model
-    torch._dynamo.reset()
     config.optims.fold_conv_bn = True
-    folding_fusing_model = compile(copy.deepcopy(model))
-    warmup(folding_fusing_model, cap)
-    profile("folding_fusing", folding_fusing_model, cap, profile_iters)
-    config.optims.clear()
-    del folding_fusing_model 
+    with TempCompiledModel() as folding_fusing_model:
+        warmup(folding_fusing_model, cap)
+        profile("folding_fusing", folding_fusing_model, cap, profile_iters, perf=PERF)
 
     # constant folding + kernel fusing + cudagraphs
-    torch._dynamo.reset()
-    config.optims.fold_conv_bn = True
     config.cudagraphs = True
-    folding_fusing_cudagraph_model = compile(copy.deepcopy(model))
-    warmup(folding_fusing_cudagraph_model, cap)
-    profile("folding_fusing_cudagraph", folding_fusing_cudagraph_model, cap, profile_iters)
-    config.optims.clear()
-    config.cudagraphs = False
-    del folding_fusing_cudagraph_model
+    with TempCompiledModel() as folding_fusing_cudagraph_model:
+        warmup(folding_fusing_cudagraph_model, cap)
+        profile(
+            "folding_fusing_cudagraph",
+            folding_fusing_cudagraph_model,
+            cap,
+            profile_iters,
+            perf=PERF
+        )
 
-    cudart().cudaProfilerStop()  # type: ignore
+    if PERF:
+        cudart().cudaProfilerStart()  # type: ignore
+
     cap.release()
