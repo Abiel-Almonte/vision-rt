@@ -74,7 +74,8 @@ class GraphExecutor{
             {
                 c10::cuda::CUDAStream capture_stream = c10::cuda::getStreamFromExternal(stream, 0);
                 c10::cuda::CUDAStreamGuard guard(capture_stream);
-                
+
+                in.copy_(tensor); // assuming the tensor in __call__ will be the same buffer
                 out.copy_(fn(in).cast<torch::Tensor>());
             }
 
@@ -105,8 +106,6 @@ class GraphExecutor{
             if(!graph_created){
                 throw std::runtime_error("Graph must be captured first with .capture");
             }
-
-            in.copy_(tensor);
             
             cudaGraphLaunch(instance, stream);
             cudaStreamSynchronize(stream);
