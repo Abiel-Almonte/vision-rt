@@ -44,7 +44,7 @@ where = ["."]
 exclude = ["csrc*", "benchmarks*", "images*"]
 
 [tool.setuptools.package-data]
-_visionrt = ["*.so", "*.pyd", "*.pyi"]
+visionrt = ["*.so", "*.pyd", "*.pyi"]
 
 # Type checker configuration
 [tool.pyright]
