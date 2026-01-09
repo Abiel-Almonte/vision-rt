@@ -17,7 +17,7 @@ import torch._inductor.config
 torch._inductor.config.debug = True  # dump code-gen
 # torch._inductor.config.triton.cudagraphs = True # triton cuda graph capture, messes with mine
 
-from _visionrt import GraphExecutor
+from ._visionrt import GraphExecutor
 from .utils import inference, logging
 from .optim import (
     Placeholder,

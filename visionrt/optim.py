@@ -11,7 +11,7 @@ from torch._inductor.lowering import make_fallback
 import triton
 import triton.language as tl
 
-from _visionrt import fused_add_relu_cuda
+from ._visionrt import fused_add_relu_cuda
 from . import config
 
 

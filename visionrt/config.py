@@ -2,7 +2,7 @@ import sys
 from typing import Any
 from types import ModuleType
 
-from _visionrt import set_verbose
+from ._visionrt import set_verbose
 
 use_custom: bool = True  # use custom optimize_fx to modify the fx graph before inductor
 use_inductor: bool = True  # use the inductor backend in `torch.compile`
