@@ -768,7 +768,7 @@ requires-dist = [
     { name = "optuna" },
     { name = "seaborn" },
     { name = "torch", specifier = "==2.8.0", index = "https://download.pytorch.org/whl/cu128" },
-    { name = "torchvision", specifier = "==0.23.0+cu128" },
+    { name = "torchvision", specifier = "==0.23.0" },
 ]
 
 [package.metadata.requires-dev]

@@ -20,5 +20,5 @@ else
   echo "Dev install (editable)..."
   uv sync
   uv pip install -e .
-  PYTHONPATH=. uv run pybind11-stubgen _visionrt -o .
+  PYTHONPATH=. uv run pybind11-stubgen visionrt._visionrt -o .
 fi

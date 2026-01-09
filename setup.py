@@ -3,11 +3,11 @@ from setuptools import setup
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
 setup(
-    name="_visionrt",
+    name="visionrt",
     version="0.1.0",
     ext_modules=[
         CUDAExtension(
-            name="_visionrt",
+            name="visionrt._visionrt",
             sources=[
                 "csrc/bindings.cpp",
                 "csrc/kernels.cu",
