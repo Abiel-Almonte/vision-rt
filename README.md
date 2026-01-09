@@ -25,5 +25,5 @@ The narrow peaks show `visionrt` is so deterministic that you can actually see t
 uv pip install git+https://github.com/Abiel-Almonte/visionrt
 ```
 
-> Requires CUDA 12.8+, Python 3.11, PyTorch 2.8, V4L2 camera.
+> Requires CUDA 12.8+, Python 3.11, PyTorch 2.8, V4L2 camera.  
 > Add your user to the video group: `sudo usermod -aG video $USER`
