@@ -13,6 +13,10 @@ class Camera:
         """
         Open a camera at the given device path (e.g., '/dev/video0').
         """
+    def __repr__(self) -> str:
+        """
+        Print the Camera object.
+        """
     def close(self) -> None:
         """
         Close the opened camera

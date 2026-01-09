@@ -31,7 +31,7 @@ PYBIND11_MODULE(_visionrt, m) {
         .def("print_formats", &Camera::list_formats, "Print all supported camera formats.")
         .def("set_format", &Camera::set_format, py::arg("index"), "Set the capture format.")
         .def("print_selected_format", &Camera::print_format, "Print the currently selected camera format.")
-
+        .def("__repr__", &Camera::__repr__, "Print the Camera object.")
         .def("stream", [](Camera& cam) {
             return FrameGenerator(&cam);
         }, py::return_value_policy::move,

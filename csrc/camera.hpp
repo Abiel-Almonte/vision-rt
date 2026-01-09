@@ -22,7 +22,7 @@ struct CameraFMT{
 };
 
 inline std::ostream& operator<<(std::ostream& os, const CameraFMT& fmt){
-    os << "Camera(width= " << fmt.width << ", height= " << fmt.height << ", fps= " << fmt.fps << ", format= " << fmt.description << ")";
+    os << "Camera(width= " << fmt.width << ", height=" << fmt.height << ", fps=" << fmt.fps << ", format=" << fmt.description << ")";
     return os;
 }
 
@@ -384,6 +384,12 @@ class Camera{
 
             torch::TensorOptions opts = torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA).requires_grad(false);
             return torch::from_blob(d_ring[idx].out, {3, (long)fmt.height, (long)fmt.width}, opts);
+        }
+
+        std::string __repr__(){
+            std::ostringstream oss;
+            oss << list[fmt_idx];
+            return oss.str();
         }
 };
 
