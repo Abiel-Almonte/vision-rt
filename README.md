@@ -1,4 +1,4 @@
-**visionrt** - Zero-overhead real-time computer vision.
+`visionrt` **- Zero-overhead real-time computer vision.**
 
 Skip the overhead:
 ```python
@@ -16,7 +16,7 @@ So fast you can see your camera's true refresh rate:
 
 ![kde](images/latency_kde.png)
 
-The narrow peaks (~10-12ms) show VisionRT is so deterministic that you can actually see the hardware. The bimodal distribution is the webcam itself, not software jitter.
+The narrow peaks show `visionrt` is so deterministic that you can actually see the hardware. The bimodal distribution is the webcam itself, not software jitter.
 
 ---
 
